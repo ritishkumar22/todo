@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-&!x0b$vci8k9i@75r&=bhoch^fqpgnslbjajy*+fhwev$+%)e@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['https://www.google.com/search?q=todo-ooyo.onrender.com', '127.0.0.1']
+ALLOWED_HOSTS = [*]
 
 
 # Application definition
@@ -42,7 +42,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'whitenoise.middleware.whitenoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
