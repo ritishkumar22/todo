@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        /* Completed task ke liye special styling */
+        .task.completed {
+            background-color: #d4edda; /* Light Green */
+            opacity: 0.7;
+        }
+        .task.completed .task-text {
+            text-decoration: line-through;
+            color: #6c757d;
+        }
+        .btn-done { background-color: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+        .btn-undo { background-color: #ffc107; color: black; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div class="todo-container">
+        <h2>Todo App</h2>
+        <form method="GET" action="" style="display: flex; gap: 10px; margin-bottom: 20px;">
+    <input type="text" name="search-area" placeholder="Search your tasks..." value="{{ search_input }}" 
+           style="flex: 1; padding: 12px; border: 2px solid #eee; border-radius: 8px; outline: none;">
+    
+    <button type="submit" style="background: #333; color: white; border: none; padding: 0 20px; border-radius: 8px; cursor: pointer; font-weight: bold;">
+        Search
+    </button>
+
+    <a href="/" style="text-decoration: none; background: #f0f0f0; color: #333; padding: 10px 15px; border-radius: 8px; font-size: 14px; display: flex; align-items: center; border: 1px solid #ddd;">
+        Reset
+    </a>
+</form>
+
+        <form method="POST" class="add-form">
+            {% csrf_token %}
+            <input type="text" name="title" placeholder="Add your new todo" required>
+            <button type="submit" name="add_task">+</button>
+        </form>
+
+        <div class="task-list">
+            {% for todo in todos %}
+                <div class="task {% if todo.completed %}completed{% endif %}">
+                    
+                    <span class="task-text">{{ todo.title }}</span>
+                    
+                    <div class="btn-group">
+                        <form method="POST" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="task_id" value="{{ todo.id }}">
+                            <button type="submit" name="complete_task" class="{% if todo.completed %}btn-undo{% else %}btn-done{% endif %}">
+                                {% if todo.completed %}Undo{% else %}Done{% endif %}
+                            </button>
+                        </form>
+
+                        <form method="POST" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="task_id" value="{{ todo.id }}">
+                            <button type="submit" name="delete_task" class="btn-delete">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="no-tasks">No tasks yet. Add one above!</p>
+            {% endfor %}
+        </div>
+
+        <div class="footer">
+            <span>You have {{ todos|length }} tasks</span>
+            <form method="POST" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" name="clear_all" class="btn-clear">Clear All</button>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>
